@@ -49,14 +49,13 @@
                                    class="layui-input" id="phone">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
-                            <button class="layui-btn" lay-submit="" lay-filter="sreach"><i
-                                    class="layui-icon">&#xe615;</i></button>
+                            <button type="submit" class="layui-btn layui-btn-normal"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 查 询</button>
                         </div>
                     </form>
                 </div>
                 <div class="layui-card-header">
-                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除
-                    </button>
+<!--                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除-->
+<!--                    </button>-->
                     <button class="layui-btn" onclick="xadmin.open('添加用户','/admin/customers/add',600,400)"><i class="layui-icon"></i>添加</button>
                 </div>
                 <div class="layui-card-body layui-table-body layui-table-main">
@@ -68,18 +67,6 @@
                         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                     </script>
 
-                </div>
-                <div class="layui-card-body ">
-                    <div class="page">
-                        <div>
-                            <a class="prev" href="">&lt;&lt;</a>
-                            <a class="num" href="">1</a>
-                            <span class="current">2</span>
-                            <a class="num" href="">3</a>
-                            <a class="num" href="">489</a>
-                            <a class="next" href="">&gt;&gt;</a>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -146,8 +133,37 @@
                 ,{field:'phone', title:'签名'}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
             ]]
-            ,page: true
+            ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                //,curr: 5 //设定初始在第 5 页
+                ,groups: 1 //只显示 1 个连续页码
+                ,first: false //不显示首页
+                ,last: false //不显示尾页
+            }
+
         });
+
+
+// 监听搜索操作
+        form.on('submit(data-search-btn)', function (data) {
+            console.log(data.field);
+            var result = JSON.stringify(data.field);
+
+            //执行搜索重载
+            table.reload('testReload', {
+                page: {
+                    curr: 1
+                }
+                , where: {
+                    username: data.field.username,
+                    phone: data.field.phone
+                }
+            }, 'data');
+
+            return false;
+        })
+
+
 
         //监听行工具事件
         table.on('tool(table_data)', function(obj){
