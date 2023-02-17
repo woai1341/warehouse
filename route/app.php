@@ -32,5 +32,10 @@ Route::group("admin", function (){
     Route::group("category", function(){
         Route::get("list", "HomeController/index");  //首页列表
     });
-    
+    // 仓库列表
+    Route::group("product", function(){
+        Route::get("list", "ProductController/index"); // 仓库列表页面
+        Route::get("getData", "ProductController/getListData"); //仓库列表数据接口
+        Route::any("add", "ProductController/add"); //添加数据
+    });
 });
