@@ -34,12 +34,12 @@
             <div class="layui-card">
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
-<!--                        <div class="layui-inline layui-show-xs-block">-->
-<!--                            <input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start">-->
-<!--                        </div>-->
-<!--                        <div class="layui-inline layui-show-xs-block">-->
-<!--                            <input class="layui-input" autocomplete="off" placeholder="截止日" name="end" id="end">-->
-<!--                        </div>-->
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input" autocomplete="off" placeholder="开始日" name="start_time" id="start_time">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input class="layui-input" autocomplete="off" placeholder="截止日" name="end_time" id="end_time">
+                        </div>
                         <div class="layui-inline layui-show-xs-block">
                             <input type="text" name="name" placeholder="请输入产品名称" autocomplete="true"
                                    class="layui-input" id="name">
@@ -78,7 +78,7 @@
         var laydate = layui.laydate;
         var form = layui.form;
         var table = layui.table;
-
+        var util = layui.util;
         // 监听全选
         form.on('checkbox(checkall)', function (data) {
 
@@ -92,12 +92,12 @@
 
         //执行一个laydate实例
         laydate.render({
-            elem: '#start' //指定元素
+            elem: '#start_time' //指定元素
         });
 
         //执行一个laydate实例
         laydate.render({
-            elem: '#end' //指定元素
+            elem: '#end_time' //指定元素
         });
 
 // 表单渲染
@@ -177,7 +177,9 @@
                 }
                 , where: {
                     name: data.field.name,
-                    trademark: data.field.trademark
+                    trademark: data.field.trademark,
+                    start_time: data.field.start_time,
+                    end_time: data.field.end_time
                 }
             }, 'data');
 
@@ -195,7 +197,7 @@
                 layer.confirm('真的删除行么', function(index){
                     // 发送请求删除ajax的信息
                     $.ajax({
-                        url: "/admin/customers/deleted",
+                        url: "/admin/product/deleted",
                         data: {
                             id: data.id
                         },
@@ -225,13 +227,19 @@
                     shadeClose:true,
                     offset: 'auto',
                     maxmin: true,
-                    content: "/admin/customers/edit/"+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    content: "/admin/product/edit/"+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 });
 
             }
         });
 
-
+        // 单元格编辑后的事件
+        table.on('edit(table_data)', function(obj){
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+            layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改值为：'+ util.escape(value));
+        });
     });
 </script>
 </html>

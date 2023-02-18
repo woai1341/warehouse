@@ -37,5 +37,8 @@ Route::group("admin", function (){
         Route::get("list", "ProductController/index"); // 仓库列表页面
         Route::get("getData", "ProductController/getListData"); //仓库列表数据接口
         Route::any("add", "ProductController/add"); //添加数据
+        Route::get("edit/:id", "ProductController/editHtml"); //编辑页面
+        Route::post("edit/:id", "ProductController/update"); //编辑数据
+        Route::post("deleted","ProductController/del");
     });
 });
