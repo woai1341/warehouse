@@ -46,7 +46,8 @@ Route::group("admin", function (){
     Route::group("sale_list", function(){
         Route::get("list", "SaleController/index"); // 仓库列表页面
         Route::get("getData", "SaleController/getListData"); //仓库列表数据接口
-        
+        Route::get("add", "SaleController/add_html"); //add 页面
+        Route::post("explode", "SaleController/explode"); //导出
     });
     
     
