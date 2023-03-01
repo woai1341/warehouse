@@ -3,16 +3,15 @@
 namespace app\controller;
 
 use app\BaseController;
-use app\model\Product;
 use think\Exception;
 use think\facade\View;
 
-class ProductController extends  BaseController
+class TrademarkController extends BaseController
 {
     public function index(){
         return view("./product/index");
     }
-
+    
     public function getListData(){
         $page = input("page", 1);
         $limit = input("limit", 10);
@@ -20,16 +19,16 @@ class ProductController extends  BaseController
         $trademark = input('trademark'); //商标
         $start_time = input("start_time"); //开始时间
         $end_time = input("end_time");      //结束时间
-
+        
         $init_query = Product::where('deleted', 0);
-
+        
         if($name){
             $init_query = $init_query->where("name", "like", "%$name%");
         }
-
+        
         if($trademark){
             $init_query = $init_query->where("trademark", "like", "%$trademark%");
-        }        
+        }
         
         if ($start_time){
             $init_query = $init_query->where("created_at", ">=", $start_time);
@@ -41,8 +40,8 @@ class ProductController extends  BaseController
         $init_query = $init_query->page($page,$limit)->select();
         
         returnListData($count, "成功", $init_query->toArray(), 0);
-    } 
-
+    }
+    
     public function add()
     {
         if ($this->request->isPost()) {
@@ -90,7 +89,7 @@ class ProductController extends  BaseController
         View::assign('is_braid', $product["is_braid"]);
         View::assign('is_chip', $product["is_chip"]);
         View::assign('foot_distance', $product["foot_distance"]);
-    
+        
         return view("./product/edit");
     }
     
@@ -109,8 +108,7 @@ class ProductController extends  BaseController
                     'is_high' => $data['is_high'],
                     'is_braid' => $data['is_braid'],
                     'is_chip' => $data['is_chip'],
-                    'foot_distance' => $data['foot_distance'],
-                    "updated_at" => date("Y-m-d H:i:s")
+                    'foot_distance' => $data['foot_distance']
                 ]);
         } catch (\Exception $e) {
             errorRep("修改失败" . $e->getMessage(), 0, []);
@@ -132,5 +130,4 @@ class ProductController extends  BaseController
         }
         successRep("删除成功", [], 200);
     }
-    
 }

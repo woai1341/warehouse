@@ -58,7 +58,7 @@ class SaleController extends BaseController
             ->page($page, $limit)
             ->select();
         
-        returnListData($init_query->count(), "成功", $init_query->toArray(), 0);
+        returnListData(100, "成功", $init_query->toArray(), 0);
     }
     
     public function add_html()

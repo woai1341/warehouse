@@ -34,14 +34,14 @@
             </div>
             <div class="layui-form-item">
                 <label for="trademark" class="layui-form-label">
-                     <span class="x-red">*</span>商标
+                     商标
                 </label>
                 <div class="layui-input-inline">
-                    <input type="text" id="trademark" name="trademark" required="" lay-verify="required
+                    <input type="text" id="trademark" name="trademark" required=""
                            autocomplete="on" class="layui-input">
                 </div>
                 <div class="layui-form-mid layui-word-aux">
-                    <span class="x-red">*</span>商标
+                    商标
                 </div>
             </div>
             <div class="layui-form-item">
@@ -56,8 +56,8 @@
             <div class="layui-form-item">
                 <label class="layui-form-label">单位</label>
                 <div class="layui-input-block">
-                    <input type="radio" name="unit" value="2" title="K" checked>
-                    <input type="radio" name="unit" value="1" title="pcs" >
+                    <input type="radio" name="unit" value="1" title="K" checked>
+                    <input type="radio" name="unit" value="2" title="pcs" >
                 </div>
             </div>
             <div class="layui-form-item">
@@ -84,7 +84,14 @@
                     <input type="radio" name="is_braid" value="1" title="是" >
                 </div>
             </div>
-            
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否贴片</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="is_chip" value="0" title="否" checked>
+                    <input type="radio" name="is_chip" value="1" title="是" >
+                </div>
+            </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">脚距</label>
                 <div class="layui-input-inline">
@@ -124,6 +131,7 @@
                         unit:data.field.unit,
                         is_high:data.field.is_high,
                         is_braid:data.field.is_braid,
+                        is_chip:data.field.is_chip,
                         foot_distance:data.field.foot_distance
                     },
                     type: 'post',
@@ -133,14 +141,16 @@
                         // console.log(resp)
                         if (resp.code == 200) {
                             layer.alert("添加成功", {
-                                icon: 6
-                            }, function () {
-                                //关闭当前frame
-                                xadmin.close();
-
-                                // 可以对父窗口进行刷新
-                                xadmin.father_reload();
-                            });
+                                icon: 6});
+                            // }, function () {
+                            //     // //关闭当前frame
+                            //     // xadmin.close();
+                            //     //
+                            //     // // 可以对父窗口进行刷新
+                            //     // xadmin.father_reload();
+                            //     // layer.alert(resp.msg, {icon: 5});
+                            //     // xadmin.close();
+                            // });
 
                         } else {
                             layer.alert(resp.msg, {icon: 5});
