@@ -4,7 +4,9 @@ declare (strict_types = 1);
 namespace app;
 
 use think\App;
+use think\cache\driver\Redis;
 use think\exception\ValidateException;
+use think\facade\Session;
 use think\Validate;
 
 /**
@@ -35,7 +37,11 @@ abstract class BaseController
      * @var array
      */
     protected $middleware = [];
-
+    /**
+     * @var Redis
+     */
+    protected $redis;
+    
     /**
      * 构造方法
      * @access public
@@ -45,7 +51,7 @@ abstract class BaseController
     {
         $this->app     = $app;
         $this->request = $this->app->request;
-
+        $this->redis = new Redis();
         // 控制器初始化
         $this->initialize();
     }

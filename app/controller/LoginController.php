@@ -3,8 +3,10 @@
 namespace app\controller;
 
 use app\BaseController;
+use think\cache\driver\Redis;
 use think\db\exception\DbException;
 use think\facade\Db;
+use think\facade\Log;
 use think\facade\Session;
 
 
@@ -48,8 +50,18 @@ class LoginController extends BaseController
             try {
                 Db::name('user')->where('id', $adminData['id'])->update(['last_login_time' => time()]);
             } catch (DbException $e) {
+                Log::error("数据库错误---" . $e->getMessage());
+                errorRep("登录失败，系统错误~");
             }
-            session('adminSessionData', $adminData);
+            // 保存信息进redis
+            $user_data = [
+                'id' => $adminData['id'],
+                "login_time" => date("Y-m-d H:i:s")
+            ];
+            
+            (new Redis)->set("user-login-".$adminData['id'], json_encode($user_data), env("JWT.EXP"));
+            
+            session('adminSessionData', $data['username']);
             
             successRep("登录成功");
             // 登录跳转
@@ -59,6 +71,8 @@ class LoginController extends BaseController
     
     public function logout()
     {
-        (new \think\facade\Session)->clear();
+        Session::destroy();
+        (new Redis)->delete("user-login");
+        return redirect('https://warehouse.12520.top/');
     }
 }

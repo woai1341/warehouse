@@ -56,11 +56,12 @@
                 <div class="layui-card-header">
 <!--                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除-->
 <!--                    </button>-->
-                    <button class="layui-btn" onclick="xadmin.open('添加产品','/admin/product/add',600,400)"><i class="layui-icon"></i>添加</button>
+                    <button class="layui-btn" onclick="xadmin.open('入库','/admin/product/add','600','800')"><i class="layui-icon"></i>入库</button>
+                    <button class="layui-btn" onclick="xadmin.open('出库','/admin/product/outOfStock','600','800')"><i class="layui-icon"></i>出库</button>
                 </div>
                 <div class="layui-card-body layui-table-body layui-table-main">
 
-                    <table class="layui-hide" id="table_data" lay-filter="table_data"></table>
+                    <table class="layui-hide" id="table_data" lay-filter="table_data" ></table>
 
                     <script type="text/html" id="barDemo">
                         <a class="layui-btn layui-btn-xs" lay-event="edit"  href="javascript:;">编辑</a>
@@ -114,44 +115,57 @@
             ,title: '仓库数据表'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
-                // ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true}
                 ,{field:'name', title:'产品名', width:120, edit: 'text', fixed: 'left', unresize: true, sort: true}
-                ,{field:'trademark', title:'品牌名', width:150, edit: 'text', templet: function(res){
+                ,{field:'trademark', title:'品牌名', width:80, edit: 'text', fixed: 'left', templet: function(res){
                         return '<em><b>'+ res.trademark +'</b></em>'
                     }}
-                ,{field:'count', title:'数量'}
-                ,{field:'unit', title:'单位', edit: 'text', sort: true, templet: function(res){
+                ,{field:'count', title:'数量', width:100}
+                ,{field:'unit', title:'单位', width:150,edit: 'text', sort: true, templet: function(res){
                         var unit;
                         if (res.unit == 1){
                             unit = "K"
+                            res.unit = "k";
                         }else{
                             unit = "PCS"
+                            res.unit = "PCS";
                         }
                         return unit;
                     }
                 }
                 ,{field:'size', title:'尺寸', width:100}
-                ,{field:'is_high', title:'是否高频低阻', width:80, edit: 'text', sort: true, templet: function(res){
+                ,{field:'is_high', title:'高频', width:69, edit: 'text', sort: true, templet: function(res){
                         var is_high;
                         if (res.is_high == 1){
-                            is_high = "是"
+                            return "<b class='x-red' >是</b>"
                         }else{
-                            is_high = "否"
+                            return "否"
                         }
-                        return is_high;
+
                     }
                 }
-                ,{field:'is_braid', title:'是否编带', width:80, edit: 'text', sort: true, templet: function(res){
+                ,{field:'is_braid', title:'编带', width:69, edit: 'text', sort: true, templet: function(res){
                         var is_braid;
                         if (res.is_braid == 1){
-                            is_braid = "是"
+                            return "<b class='x-red' >是</b>"
+
                         }else{
-                            is_braid = "否"
+                            return "否"
                         }
-                        return is_braid;
+
                     }
                 }
-                ,{field:'foot_distance', title:'脚距', width:100}
+                ,{field:'is_chip', title:'贴片', width:69, edit: 'text', sort: true, templet: function(res){
+                        var is_chip;
+                        if (res.is_chip == 1){
+                            return "<b class='x-red' >是</b>"
+                        }else{
+                            return  "否"
+                        }
+
+                    }
+                }
+                ,{field:'foot_distance', title:'脚距', width:64}
+                ,{field:'remark', title:'备注', width:100}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
             ]]
             ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
@@ -160,6 +174,7 @@
                 ,groups: 1 //只显示 1 个连续页码
                 ,first: false //不显示首页
                 ,last: false //不显示尾页
+                ,limit: 20
             }
 
         });
@@ -222,7 +237,7 @@
                 // /admin/customers/edit
                 layer.open({
                     type: 2,
-                    area: ['50%', '50%'],
+                    area: ['50%', '700px'],
                     resize: true,
                     shadeClose:true,
                     offset: 'auto',

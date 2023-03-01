@@ -85,15 +85,27 @@
                     <input type="radio" name="is_braid" value="1" title="是" {if $is_braid == 1} checked {/if}>
                 </div>
             </div>
-            
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否贴片</label>
+                <div class="layui-input-block">
+                    <input type="radio" name="is_chip" value="0" title="否" {if $is_chip == 0} checked {/if}>
+                    <input type="radio" name="is_chip" value="1" title="是" {if $is_chip == 1} checked {/if}>
+                </div>
+            </div>
             <div class="layui-form-item">
                 <label class="layui-form-label">脚距</label>
                 <div class="layui-input-inline">
                     <input type="text" id="foot_distance" name="foot_distance" 
                            autocomplete="off" class="layui-input" value="{$foot_distance}">
                 </div>
-            </div> 
-
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">备注</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="remark" name="remark"
+                           autocomplete="off" class="layui-input" value="{$remark}" >
+                </div>
+            </div>
             <div class="layui-form-item">
                 <label for="L_repass" class="layui-form-label">
                 </label>
@@ -125,7 +137,9 @@
                         unit:data.field.unit,
                         is_high:data.field.is_high,
                         is_braid:data.field.is_braid,
-                        foot_distance:data.field.foot_distance
+                        is_chip:data.field.is_chip,
+                        foot_distance:data.field.foot_distance,
+                        remark:data.field.remark
                     },
                     type: 'post',
                     dataType: 'json',

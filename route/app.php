@@ -19,6 +19,7 @@ Route::group("admin", function (){
     Route::group("login", function (){
         Route::get("home", "LoginController/home"); //首页信息
         Route::post("userLogin", "LoginController/login"); //用户登录
+        Route::any('userLogout', "LoginController/logout"); //退出登录
     });
     // 客户
     Route::group("customers", function (){
