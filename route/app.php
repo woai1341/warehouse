@@ -14,6 +14,7 @@ Route::get('/', 'Index/index');
 
 Route::group("admin", function (){
     Route::get("welcome", "Index/welcome");
+    Route::get('productData', 'CommController/getAllProductData'); // 仓库现有产品数据
     // 登录
     Route::group("login", function (){
         Route::get("home", "LoginController/home"); //首页信息
@@ -42,4 +43,13 @@ Route::group("admin", function (){
         Route::post("deleted","ProductController/del");
         Route::post('out/:id', "ProductController/outOfStock"); //出库
     });
+    // 销售记录
+    Route::group("sale_list", function(){
+        Route::get("list", "SaleController/index"); // 仓库列表页面
+        Route::get("getData", "SaleController/getListData"); //仓库列表数据接口
+        Route::get("add", "SaleController/add_html"); //add 页面
+        Route::post("explode", "SaleController/explode"); //导出
+    });
+    
+    
 });

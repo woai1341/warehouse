@@ -19,10 +19,9 @@
 <body>
 <div class="x-nav">
           <span class="layui-breadcrumb">
-            <a href="">首页</a>
-            <a href="">演示</a>
+            <a href="">客户</a>
             <a>
-              <cite>导航元素</cite></a>
+              <cite>销售记录</cite></a>
           </span>
     <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
        onclick="location.reload()" title="刷新">
@@ -34,36 +33,36 @@
             <div class="layui-card">
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
-<!--                        <div class="layui-inline layui-show-xs-block">-->
-<!--                            <input class="layui-input" autocomplete="off" placeholder="开始日" name="start" id="start">-->
-<!--                        </div>-->
-<!--                        <div class="layui-inline layui-show-xs-block">-->
-<!--                            <input class="layui-input" autocomplete="off" placeholder="截止日" name="end" id="end">-->
-<!--                        </div>-->
                         <div class="layui-inline layui-show-xs-block">
-                            <input type="text" name="username" placeholder="请输入用户名" autocomplete="off"
-                                   class="layui-input" id="username">
+                            <input class="layui-input" autocomplete="off" placeholder="开始日" name="start_time" id="start_time">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
-                            <input type="text" name="phone" placeholder="请输入手机号" autocomplete="off"
-                                   class="layui-input" id="phone">
+                            <input class="layui-input" autocomplete="off" placeholder="截止日" name="end_time" id="end_time">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" name="name" placeholder="请输入产品名称" autocomplete="true"
+                                   class="layui-input" id="name">
+                        </div>
+                        <div class="layui-inline layui-show-xs-block">
+                            <input type="text" name="trademark" placeholder="请输入商标" autocomplete="off"
+                                   class="layui-input" id="trademark">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
                             <button type="submit" class="layui-btn layui-btn-normal"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 查 询</button>
                         </div>
                     </form>
                 </div>
-                <div class="layui-card-header">
-<!--                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除-->
-<!--                    </button>-->
-                    <button class="layui-btn" onclick="xadmin.open('添加用户','/admin/customers/add',600,400)"><i class="layui-icon"></i>添加</button>
+                <div class="layui-card-header" >
+                    <!--                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除-->
+                    <!--                    </button>-->
+                    <button class="layui-btn layui-btn-xs"  data-type="tabAdd" onclick="aa()" ><i class="layui-icon"></i>创建订单</button>
                 </div>
                 <div class="layui-card-body layui-table-body layui-table-main">
 
                     <table class="layui-hide" id="table_data" lay-filter="table_data"></table>
 
                     <script type="text/html" id="barDemo">
-                        <a class="layui-btn layui-btn-xs" lay-event="edit"  href="javascript:;">编辑</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="edit"  href="javascript:;">详情</a>
                         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                     </script>
 
@@ -78,7 +77,7 @@
         var laydate = layui.laydate;
         var form = layui.form;
         var table = layui.table;
-
+        var util = layui.util,element = layui.element;
         // 监听全选
         form.on('checkbox(checkall)', function (data) {
 
@@ -92,45 +91,82 @@
 
         //执行一个laydate实例
         laydate.render({
-            elem: '#start' //指定元素
+            elem: '#start_time' //指定元素
         });
 
         //执行一个laydate实例
         laydate.render({
-            elem: '#end' //指定元素
+            elem: '#end_time' //指定元素
         });
-
+//触发事件
+        var active = {
+            tabAdd: function(){
+                //新增一个Tab项
+                element.tabAdd(".page-content .layui-tab-title", {
+                    title: '新选项'+ (Math.random()*1000|0) //用于演示
+                    ,content: '内容'+ (Math.random()*1000|0)
+                    ,id: new Date().getTime() //实际使用一般是规定好的id，这里以时间戳模拟下
+                })
+            }
+        };
 // 表单渲染
         table.render({
             id:'testReload',
             elem: '#table_data'
-            ,url:'/admin/customers/listData'
+            ,url:'/admin/sale_list/getData'
             ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
             ,defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
                 title: '提示'
                 ,layEvent: 'LAYTABLE_TIPS'
                 ,icon: 'layui-icon-tips'
             }]
-            ,title: '客户数据表'
+            ,title: '仓库数据表'
             ,cols: [[
                 {type: 'checkbox', fixed: 'left'}
-                ,{field:'id', title:'ID', width:80, fixed: 'left', unresize: true, sort: true}
-                ,{field:'name', title:'用户名', width:120, edit: 'text'}
-                ,{field:'email', title:'邮箱', width:150, edit: 'text', templet: function(res){
-                        return '<em>'+ res.email +'</em>'
-                    }}
-                ,{field:'sex', title:'性别', width:80, edit: 'text', sort: true, templet: function(res){
-                        var sex;
-                        if (res.sex == 1){
-                            sex = "男"
+                ,{field: 'order_no', title:'订单编号', sort: true, fixed: 'left'}
+                ,{field:'product_name', title:'产品信息', width:400, edit: 'text', fixed: 'left', sort: true,templet: function(res){
+                        var is_high,is_braid,foot_distance;
+                        if (res.hasOneProduct){
+                            //高频低阻显示
+                            if (res.hasOneProduct.is_high == 1){
+                                is_high = "高频低阻";
+                            }else{
+                                is_high = " ";
+                            }
+                            //编织带显示
+                            if (res.hasOneProduct.is_braid == 1){
+                                is_braid = "编织带";
+                            }else{
+                                is_braid =" ";
+                            }
+                            if (res.hasOneProduct.foot_distance) {
+                                foot_distance = res.hasOneProduct.foot_distance;
+                            }else{
+                                foot_distance = " ";
+                            }
                         }else{
-                            sex = "女"
+                            is_high = " ";
+                            is_braid = " ";
+                            foot_distance = " ";
                         }
-                        return sex;
+                        return '<em><b>'+ res.trademark +'</b></em>' + "&nbsp;&nbsp;" + res.product_name + "&nbsp;&nbsp;" + res.customer_name
+                            + "&nbsp;&nbsp;" + res.product_size + "&nbsp;" + is_high  + "&nbsp;" + is_braid + "&nbsp;" + "P " + foot_distance;
                     }
                 }
-                ,{field:'address', title:'城市', width:100}
-                ,{field:'phone', title:'签名'}
+                ,{field:'count', title:'数量',  width:80, fixed: "left",templet: function(res){
+                        var unit;
+                        if (res.unit == 1){
+                            unit = "K"
+                        }else{
+                            unit = "PCS"
+                        }
+                        return "<b>" + res.count + "</b>" + " " + unit
+                    }
+                }
+                ,{field: 'price', title:'单价', sort: true}
+                ,{field: 'total_price', title:'单品合计（总价）', sort: true}
+                ,{field: 'order_time', title:'下单时间', sort: true}
+                // ,{field: 'sum_count', title:'月总数量', sort: true}
                 ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
             ]]
             ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
@@ -155,15 +191,15 @@
                     curr: 1
                 }
                 , where: {
-                    username: data.field.username,
-                    phone: data.field.phone
+                    name: data.field.name,
+                    trademark: data.field.trademark,
+                    start_time: data.field.start_time,
+                    end_time: data.field.end_time
                 }
             }, 'data');
 
             return false;
         })
-
-
 
         //监听行工具事件
         table.on('tool(table_data)', function(obj){
@@ -174,7 +210,7 @@
                 layer.confirm('真的删除行么', function(index){
                     // 发送请求删除ajax的信息
                     $.ajax({
-                        url: "/admin/customers/deleted",
+                        url: "/admin/product/deleted",
                         data: {
                             id: data.id
                         },
@@ -204,13 +240,32 @@
                     shadeClose:true,
                     offset: 'auto',
                     maxmin: true,
-                    content: "/admin/customers/edit/"+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    content: "/admin/product/edit/"+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 });
 
             }
         });
-
-
+        // 单元格编辑后的事件
+        table.on('edit(table_data)', function(obj){
+            var value = obj.value //得到修改后的值
+                ,data = obj.data //得到所在行所有键值
+                ,field = obj.field; //得到字段
+            layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改值为：'+ util.escape(value));
+        });
     });
+    function aa() {
+        // layer.open({
+        //     type: 2,
+        //     area: ['100%', '100%'],
+        //     resize: true,
+        //     shadeClose:true,
+        //     offset: 'auto',
+        //     maxmin: true,
+        //     content: ["/admin/sale_list/add", "no"]
+        // });
+
+        // xadmin.open("tie", "/admin/sale_list/add",false)
+        xadmin.open("tie", "/admin/sale_list/add")
+    }
 </script>
 </html>

@@ -6,7 +6,7 @@
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport"
-          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8"/>
     <link rel="stylesheet" href="__CSS__/font.css">
     <link rel="stylesheet" href="__CSS__/xadmin.css">
     <script src="__LIB__/layui/layui.js" charset="utf-8"></script>
@@ -60,7 +60,7 @@
                 </div>
                 <div class="layui-card-body layui-table-body layui-table-main">
 
-                    <table class="layui-hide" id="table_data" lay-filter="table_data"></table>
+                    <table class="layui-hide" id="table_data" lay-filter="table_data" ></table>
 
                     <script type="text/html" id="barDemo">
                         <a class="layui-btn layui-btn-xs" lay-event="edit"  href="javascript:;">编辑</a>
@@ -119,36 +119,54 @@
                 ,{field:'trademark', title:'品牌名', width:150, edit: 'text', templet: function(res){
                         return '<em><b>'+ res.trademark +'</b></em>'
                     }}
-                ,{field:'count', title:'数量'}
-                ,{field:'unit', title:'单位', edit: 'text', sort: true, templet: function(res){
+                ,{field:'count', title:'数量', width:100}
+                ,{field:'unit', title:'单位', width:150,edit: 'text', sort: true, templet: function(res){
                         var unit;
                         if (res.unit == 1){
                             unit = "K"
+                            res.unit = "k";
                         }else{
                             unit = "PCS"
+                            res.unit = "PCS";
                         }
                         return unit;
                     }
                 }
                 ,{field:'size', title:'尺寸', width:100}
-                ,{field:'is_high', title:'是否高频低阻', width:80, edit: 'text', sort: true, templet: function(res){
+                ,{field:'is_high', title:'是否高频低阻', width:120, edit: 'text', sort: true, templet: function(res){
                         var is_high;
                         if (res.is_high == 1){
-                            is_high = "是"
+                            is_high = "是";
+                            res.is_high = "是"
                         }else{
                             is_high = "否"
+                            res.is_high = "否"
                         }
                         return is_high;
                     }
                 }
-                ,{field:'is_braid', title:'是否编带', width:80, edit: 'text', sort: true, templet: function(res){
+                ,{field:'is_braid', title:'是否编带', width:100, edit: 'text', sort: true, templet: function(res){
                         var is_braid;
                         if (res.is_braid == 1){
                             is_braid = "是"
+                            res.is_braid ="是"
                         }else{
                             is_braid = "否"
+                            res.is_braid ="否"
                         }
                         return is_braid;
+                    }
+                }
+                ,{field:'is_chip', title:'是否贴片', width:100, edit: 'text', sort: true, templet: function(res){
+                        var is_chip;
+                        if (res.is_chip == 1){
+                            is_chip = "是"
+                            res.is_chip ="是"
+                        }else{
+                            is_chip = "否"
+                            res.is_chip ="否"
+                        }
+                        return is_chip;
                     }
                 }
                 ,{field:'foot_distance', title:'脚距', width:100}
@@ -160,6 +178,7 @@
                 ,groups: 1 //只显示 1 个连续页码
                 ,first: false //不显示首页
                 ,last: false //不显示尾页
+                ,limit: 20
             }
 
         });
