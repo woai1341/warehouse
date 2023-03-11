@@ -3,6 +3,7 @@
 namespace app\controller;
 
 use app\BaseController;
+use think\cache\driver\Redis;
 use think\db\exception\DbException;
 use think\facade\Db;
 use think\facade\Session;
