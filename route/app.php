@@ -42,6 +42,7 @@ Route::group("admin", function (){
         Route::get("edit/:id", "ProductController/editHtml"); //编辑页面
         Route::post("edit/:id", "ProductController/update"); //编辑数据
         Route::post("deleted","ProductController/del");
+        Route::post('out/:id', "ProductController/outOfStock"); //出库
     });
     // 销售记录
     Route::group("sale_list", function(){

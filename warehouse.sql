@@ -1,17 +1,32 @@
 /*
+<<<<<<< HEAD
+ Navicat MySQL Data Transfer
+
+ Source Server         : localhost_3306
+ Source Server Type    : MySQL
+ Source Server Version : 50726
+=======
  Navicat Premium Data Transfer
 
  Source Server         : 本地
  Source Server Type    : MySQL
  Source Server Version : 50728
+>>>>>>> 4dd7dfe2d6c4fd9a93fe3b8d411b1f16174f8fb0
  Source Host           : localhost:3306
  Source Schema         : warehouse
 
  Target Server Type    : MySQL
+<<<<<<< HEAD
+ Target Server Version : 50726
+ File Encoding         : 65001
+
+ Date: 17/02/2023 23:03:14
+=======
  Target Server Version : 50728
  File Encoding         : 65001
 
  Date: 18/02/2023 18:19:00
+>>>>>>> 4dd7dfe2d6c4fd9a93fe3b8d411b1f16174f8fb0
 */
 
 SET NAMES utf8mb4;

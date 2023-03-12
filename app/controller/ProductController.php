@@ -4,6 +4,7 @@ namespace app\controller;
 
 use app\BaseController;
 use app\model\Product;
+use app\service\ProductService;
 use think\Exception;
 use think\facade\View;
 
@@ -29,7 +30,7 @@ class ProductController extends  BaseController
 
         if($trademark){
             $init_query = $init_query->where("trademark", "like", "%$trademark%");
-        }        
+        }
         
         if ($start_time){
             $init_query = $init_query->where("created_at", ">=", $start_time);
@@ -41,7 +42,7 @@ class ProductController extends  BaseController
         $init_query = $init_query->page($page,$limit)->select();
         
         returnListData($count, "成功", $init_query->toArray(), 0);
-    } 
+    }
 
     public function add()
     {
@@ -135,5 +136,36 @@ class ProductController extends  BaseController
         }
         successRep("删除成功", [], 200);
     }
-    
+//    出库
+    function outOfStock($id){
+        if (empty($id)) errorRep("参数必填");
+//        获取数量
+        $count = input("count");
+        if (empty($count) || $count == 0 || $count == "0"){
+            errorRep("请输入正确且大于0的库存值");
+        }
+
+
+//        id不为空，查询相应id的数据，丢进左侧的redis队列中，查询右侧，削峰更新出库信息
+//        1、查询数据
+        $product = Product::where(["id" => $id, 'deleted' => 0])->find();
+        if (empty($product)){
+            errorRep("产品不存在");
+        }
+//      判断库存是否小于输入要出库的量
+        if ((float)$product->count < (float)$count || (float)$product->count == 0){
+            errorRep("库存不足");
+        }
+//        转化成特定的产品规格信息
+        $stock_string = ProductService::getInstance()->toSpecialString($product);
+
+//        减少当前库存信息
+        $res = ProductService::getInstance()->reductionStock($id,$count,$product->count,$stock_string);
+        if ($res){
+            successRep("出库成功");
+        }
+        errorRep("出库失败");
+
+    }
+
 }
