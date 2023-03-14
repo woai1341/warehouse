@@ -55,6 +55,15 @@
                 </div>
             </div>
             <div class="layui-form-item">
+                <label for="price" class="layui-form-label">
+                    <span class="x-red">*</span>单价
+                </label>
+                <div class="layui-input-inline">
+                    <input type="text" id="price" name="price" required="" lay-verify="required"
+                           autocomplete="on" class="layui-input" value="{$amount}">
+                </div>
+            </div>
+            <div class="layui-form-item">
                 <label class="layui-form-label">单位</label>
                 <div class="layui-input-block">
                     <input type="radio" name="unit" value="1" title="K"  {if $unit == 1} checked {/if}>
@@ -135,6 +144,7 @@
                         size:data.field.size,
                         count:data.field.count,
                         unit:data.field.unit,
+                        price:data.field.price,
                         is_high:data.field.is_high,
                         is_braid:data.field.is_braid,
                         is_chip:data.field.is_chip,

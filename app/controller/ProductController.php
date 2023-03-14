@@ -3,7 +3,9 @@
 namespace app\controller;
 
 use app\BaseController;
+use app\model\OutOfStock;
 use app\model\Product;
+use app\model\ProductPrice;
 use app\service\ProductService;
 use think\Exception;
 use think\facade\View;
@@ -51,6 +53,7 @@ class ProductController extends  BaseController
             if (empty($data)) errorRep("不能添加空数据", 0, []);
             $insertData = [
                 'name' => $data['name'],
+                "amount" => $data["price"],
                 'trademark' => $data['trademark'],
                 'foot_distance' => $data['foot_distance'],
                 'size' => $data['size'],
@@ -59,20 +62,35 @@ class ProductController extends  BaseController
                 'is_high' => $data['is_high'],
                 'is_braid' => $data['is_braid'],
                 'is_chip' => $data['is_chip'],
-                'remark' => $data['remark'],
+                'remark' => $data['remark']
             ];
             try {
-                Product::insert($insertData);
+                $product_id = Product::insertGetId($insertData);
+                ProductPrice::insert([
+                    "product_id" => $product_id,
+                    "amount" => $data["price"]
+                ]);
             } catch (Exception $e) {
                 errorRep("添加失败" . $e->getMessage(), 0, []);
             }
             successRep("添加成功", []);
         } else {
+            // 查询拥有的产品
+            // View::assign("");
             return \view("./product/add");
         }
         return false;
     }
-    
+    //价格波动图
+    public function getEchartsLines($id){
+        if ($this->request->isGet()){
+            View::assign('id', $id);
+            return \view("./product/price_change");
+        }else{
+            // $查询某个产品的价格
+        }
+       
+    }
     
     // 编辑页面
     public function editHtml($id)
@@ -84,6 +102,7 @@ class ProductController extends  BaseController
         }
         View::assign('id', $product["id"]);
         View::assign('name', $product["name"]);
+        View::assign("price", $product["amount"]);
         View::assign('trademark', $product["trademark"]);
         View::assign('size', $product["size"]);
         View::assign('count', $product["count"]);
@@ -93,7 +112,7 @@ class ProductController extends  BaseController
         View::assign('is_chip', $product["is_chip"]);
         View::assign('foot_distance', $product["foot_distance"]);
         View::assign('remark', $product["remark"]);
-        
+        View::assign('amount', $product["amount"]);
         return view("./product/edit");
     }
     
@@ -105,6 +124,7 @@ class ProductController extends  BaseController
         try {
             Product::where(["id" => $id, "deleted" => 0])->update(
                 ['name' => $data['name'],
+                    "amount" => $data["price"],
                     'trademark' => $data['trademark'],
                     'size' => $data['size'],
                     'count' => $data['count'],
@@ -116,6 +136,10 @@ class ProductController extends  BaseController
                     "updated_at" => date("Y-m-d H:i:s"),
                     'remark' => $data['remark'],
                 ]);
+            if (ProductPrice::where(["product_id" => $id, 'deleted' => 0])->value("id")){
+                ProductPrice::where(["product_id" => $id, 'deleted' => 0])->update(["deleted" => 1]);
+            }
+            ProductPrice::insert( ["product_id" => $id,"amount" => $data["price"]]);
         } catch (\Exception $e) {
             errorRep("修改失败" . $e->getMessage(), 0, []);
         }
@@ -160,12 +184,40 @@ class ProductController extends  BaseController
         $stock_string = ProductService::getInstance()->toSpecialString($product);
 
 //        减少当前库存信息
-        $res = ProductService::getInstance()->reductionStock($id,$count,$product->count,$stock_string);
+        $res = ProductService::getInstance()->reductionStock($id,$count,$product->count,$stock_string,$product->unit);
         if ($res){
             successRep("出库成功");
         }
         errorRep("出库失败");
 
     }
-
+    
+    public function outHTML($id){
+        View::assign('id', $id);
+        return \view("./product/out");
+    }
+    
+    public function showTime($id){
+        if (empty($id)) errorRep("参数不能为空");
+        
+        $data = OutOfStock::where(["product_id" => $id, "deleted" => 0])
+            ->field([
+                'product_info','count','remaining_quantity','created_at'
+            ])->select();
+        
+        if ($data->isEmpty()){
+            $data[0] =  [
+                "product_info" => "暂无记录",
+                "count" => 0,
+                "remaining_quantity" => Product::where(["id" => $id, "deleted" => 0])->value('count'),
+                "created_at" => date("Y-m-d H:i:s") ?? "2023-03-12"
+            ];
+        }
+        $data = $data->toArray();
+        
+        View::assign("data", $data);
+       
+        return view("./product/time_line");
+        
+    }
 }

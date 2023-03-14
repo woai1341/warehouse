@@ -57,7 +57,7 @@
 <!--                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除-->
 <!--                    </button>-->
                     <button class="layui-btn" onclick="xadmin.open('入库','/admin/product/add','600','800')"><i class="layui-icon"></i>入库</button>
-                    <button class="layui-btn" onclick="xadmin.open('出库','/admin/product/outOfStock','600','800')"><i class="layui-icon"></i>出库</button>
+<!--                    <button class="layui-btn" onclick="xadmin.open('出库','/admin/product/outOfStock','600','800')"><i class="layui-icon"></i>出库</button>-->
                 </div>
                 <div class="layui-card-body layui-table-body layui-table-main">
 
@@ -66,6 +66,7 @@
                     <script type="text/html" id="barDemo">
                         <a class="layui-btn layui-btn-xs" lay-event="edit"  href="javascript:;">编辑</a>
                         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">出库详情</a>
                     </script>
 
                 </div>
@@ -74,6 +75,13 @@
     </div>
 </div>
 </body>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckData">出库</button>
+        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">查看历史单价</button>
+<!--        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>-->
+    </div>
+</script>
 <script>
     layui.use(['laydate', 'form', 'table'], function () {
         var laydate = layui.laydate;
@@ -120,7 +128,7 @@
                         return '<em><b>'+ res.trademark +'</b></em>'
                     }}
                 ,{field:'count', title:'数量', width:100}
-                ,{field:'unit', title:'单位', width:150,edit: 'text', sort: true, templet: function(res){
+                ,{field:'unit', title:'单位', width:80,edit: 'text', sort: true, templet: function(res){
                         var unit;
                         if (res.unit == 1){
                             unit = "K"
@@ -132,6 +140,14 @@
                         return unit;
                     }
                 }
+                ,{field:'amount', title:'单价', width:100, templet: function(res){
+                            if (res.amount == null){
+                                return 0.00
+                            }else{
+                                return res.amount
+                            }
+                        }
+                    }
                 ,{field:'size', title:'尺寸', width:100}
                 ,{field:'is_high', title:'高频', width:69, edit: 'text', sort: true, templet: function(res){
                         var is_high;
@@ -166,7 +182,7 @@
                 }
                 ,{field:'foot_distance', title:'脚距', width:64}
                 ,{field:'remark', title:'备注', width:100}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:150}
+                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:250}
             ]]
             ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
@@ -245,6 +261,50 @@
                     content: "/admin/product/edit/"+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 });
 
+            }else if(obj.event == "detail"){
+                // /admin/customers/edit
+                console.log(data.id)
+                layer.open({
+                    type: 2,
+                    area: ['50%', '700px'],
+                    resize: true,
+                    shadeClose:true,
+                    offset: 'auto',
+                    maxmin: true,
+                    content: "/admin/product/showTime/"+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                });
+            }
+        });
+
+        table.on('toolbar(table_data)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch(obj.event){
+                case 'getCheckData':
+                    var data = checkStatus.data;
+                    // layer.alert(JSON.stringify(data));
+                    layer.open({
+                        type: 2,
+                        area: ['50%', '700px'],
+                        resize: true,
+                        shadeClose:true,
+                        offset: 'auto',
+                        maxmin: true,
+                        content: "/admin/product/out_html/"+data[0].id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    });
+                    break;
+                case 'getCheckLength':
+                    var data = checkStatus.data;
+
+                    layer.open({
+                        type: 2,
+                        area: ['50%', '700px'],
+                        resize: true,
+                        shadeClose:true,
+                        offset: 'auto',
+                        maxmin: true,
+                        content: "/admin/product/out_html/"+data[0].id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    });
+                    break;
             }
         });
 

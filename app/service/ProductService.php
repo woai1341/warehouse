@@ -27,7 +27,7 @@ class ProductService extends  BaseService
             }
             if ($product->is_high == 1){
                 $is_high = "高频";
-                $foot_distance = $product->foot_distance;
+                $foot_distance = " 脚距: " . $product->foot_distance;
             }
             if ($product->is_braid == 1){
                 $is_braid = "贴片电解电容";
@@ -35,7 +35,7 @@ class ProductService extends  BaseService
         }
 //        组装要存进来的 数据
         return "商标: " . $product->trademark . " 品名规格: " . $product->name. " 尺寸: " . $product->size .
-            " 数量: " .$product->count . " 单位: " . $unit . " " . $is_high . " 脚距：" . $foot_distance . $is_braid;
+            " 数量: " .$product->count . " 单位: " . $unit . " " . $is_high  . $foot_distance . $is_braid;
     }
 
 //    减少库存
@@ -47,14 +47,12 @@ class ProductService extends  BaseService
      * @param $dataString | 出库产品的组合信息
      * @return boolean
      */
-    public function reductionStock($id,$count,$oldCount,$dataString){
+    public function reductionStock($id,$count,$oldCount,$dataString,$unit){
 //        更新产品表中的库存数量
 //        更新新出库表中的剩余量和出库量
         Db::startTrans();
         try {
-            if ((float)$count > (float)$oldCount){
-                errorRep("数量超过库存");
-            }
+           
             //剩余 surplus remainder
             $surplus_count =(float)$oldCount - (float)$count;
 //            更新产品信息表数量
@@ -65,7 +63,8 @@ class ProductService extends  BaseService
                 "product_info" => $dataString,
                 "count" => $count,
                 "remaining_quantity" => $surplus_count,
-                "operate_user_id" => 1 //暂时设定为1，后面加上jwt后设置成用户id
+                "operate_user_id" => 1, //暂时设定为1，后面加上jwt后设置成用户id
+                "unit" => $unit
                 ]);
             Db::commit();
             return true;

@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>出库</title>
+    <link rel="stylesheet" href="__CSS__/font.css">
+    <link rel="stylesheet" href="__CSS__/xadmin.css">
+    <script src="__LIB__/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="__JS__/xadmin.js"></script>
+    <!--[if lt IE 9]>
+    <script src="https://cdn.staticfile.org/html5shiv/r29/html5.min.js"></script>
+    <script src="https://cdn.staticfile.org/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<form class="layui-form" action="" lay-filter="example">
+    <input type="hidden" name="id" id="id" value="{$id}">
+    <div class="layui-form-item">
+        <label class="layui-form-label">输入框</label>
+        <div class="layui-input-block">
+            <input type="number" name="count" id="count" lay-verify="required" autocomplete="off" placeholder="出库的数量"
+                   class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1">立即提交</button>
+        </div>
+    </div>
+</form>
+</body>
+
+<script>
+    layui.use(['laydate', 'form', 'table'], function () {
+        var laydate = layui.laydate;
+        var form = layui.form;
+        var table = layui.table;
+        var util = layui.util;
+
+        //监听提交
+        form.on('submit(demo1)', function (data) {
+            var id = document.getElementById("id").value,
+                count = document.getElementById("count").value
+            var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+
+            $.ajax({
+                url: "/admin/product/out/" + id,
+                data: {
+                    count: count,
+                },
+                type: 'post',
+                dataType: 'json',
+                sync: false,
+                success: function (resp) {
+                    console.log(resp)
+                    if (resp.code == 200) {
+                        layer.msg(resp.msg, {icon: 1},function () {
+                            // parent.layer.close(index); //再执行关闭
+                            xadmin.father_reload();
+                            xadmin.close();
+                        });
+                    } else {
+                        layer.alert(resp.msg, {icon: 5});
+                    }
+                }
+            })
+            return false;
+        });
+
+    })
+
+</script>
+
+
+</html>

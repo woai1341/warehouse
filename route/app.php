@@ -43,6 +43,9 @@ Route::group("admin", function (){
         Route::post("edit/:id", "ProductController/update"); //编辑数据
         Route::post("deleted","ProductController/del");
         Route::post('out/:id', "ProductController/outOfStock"); //出库
+        Route::get('out_html/:id', "ProductController/outHTML");    //出库页面
+        Route::get("showTime/:id", "ProductController/showTime"); //出库时间列表详情
+        Route::get('echarts/:id', "ProductController/getEchartsLines");
     });
     // 销售记录
     Route::group("sale_list", function(){
