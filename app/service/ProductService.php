@@ -35,7 +35,7 @@ class ProductService extends  BaseService
         }
 //        组装要存进来的 数据
         return "商标: " . $product->trademark . " 品名规格: " . $product->name. " 尺寸: " . $product->size .
-            " 数量: " .$product->count . " 单位: " . $unit . " " . $is_high  . $foot_distance . $is_braid;
+            " 数量: " .$product->count . " 单位: " . $unit . " " . $is_high  . $foot_distance . $is_braid . " 备注：" .$product->remark;
     }
 
 //    减少库存

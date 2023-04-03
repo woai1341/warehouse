@@ -11,7 +11,7 @@
 use think\facade\Route;
 //登录
 Route::get('/', 'Index/index');
-
+Route::get("test", "Index/test");
 Route::group("admin", function (){
     Route::get("welcome", "Index/welcome");
     Route::get('productData', 'CommController/getAllProductData'); // 仓库现有产品数据
@@ -55,5 +55,5 @@ Route::group("admin", function (){
         Route::post("explode", "SaleController/explode"); //导出
     });
     
-    
+    Route::get("test", "Index/test");
 });

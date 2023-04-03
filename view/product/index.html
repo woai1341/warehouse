@@ -35,36 +35,78 @@
                 <div class="layui-card-body ">
                     <form class="layui-form layui-col-space5">
                         <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input" autocomplete="off" placeholder="开始日" name="start_time" id="start_time">
+                            <input class="layui-input" autocomplete="off" placeholder="开始日" name="start_time"
+                                   id="start_time">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
-                            <input class="layui-input" autocomplete="off" placeholder="截止日" name="end_time" id="end_time">
+                            <input class="layui-input" autocomplete="off" placeholder="截止日" name="end_time"
+                                   id="end_time">
                         </div>
                         <div class="layui-inline layui-show-xs-block">
                             <input type="text" name="name" placeholder="请输入产品名称" autocomplete="true"
                                    class="layui-input" id="name">
                         </div>
-                        <div class="layui-inline layui-show-xs-block">
-                            <input type="text" name="trademark" placeholder="请输入商标" autocomplete="off"
-                                   class="layui-input" id="trademark">
-                        </div>
-                        <div class="layui-inline layui-show-xs-block">
-                            <button type="submit" class="layui-btn layui-btn-normal"  lay-submit lay-filter="data-search-btn"><i class="layui-icon"></i> 查 询</button>
-                        </div>
+                        <!--                        <div class="layui-inline layui-show-xs-block">-->
+                        <!--                            <input type="text" name="trademark" placeholder="请输入商标" autocomplete="off"-->
+                        <!--                                   class="layui-input" id="trademark">-->
+                        <!--                        </div>-->
+                        <div class="layui-inline">
+                            <!--                            <label class="layui-form-label">商标</label>-->
+                            <div class="layui-input-inline">
+                                <select name="trademark" lay-verify="" lay-search="">
+                                    <option value="">直接选择商标或搜索</option>
+                                    {volist name="data" id="vo"}
+                                    <option value="{$vo.name}">{$vo.name}</option>
+                                    {/volist}
+
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="is_high" lay-verify="" lay-search="">
+                                    <option value="">是否高频低阻</option>
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="is_brain" lay-verify="" lay-search="">
+                                    <option value="">是否编带</option>
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline">
+                                <select name="is_chip" lay-verify="" lay-search="">
+                                    <option value="">是否贴片</option>
+                                    <option value="0">否</option>
+                                    <option value="1">是</option>
+                                </select>
+                            </div>
+                            <div class="layui-inline layui-show-xs-block">
+                                <input type="text" name="size" placeholder="请输入尺寸" autocomplete="off"
+                                       class="layui-input" id="size">
+                            </div>
+                            <div class="layui-inline layui-show-xs-block">
+                                <button type="submit" class="layui-btn layui-btn-normal" lay-submit
+                                        lay-filter="data-search-btn"><i class="layui-icon"></i> 查 询
+                                </button>
+                            </div>
                     </form>
                 </div>
                 <div class="layui-card-header">
-<!--                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除-->
-<!--                    </button>-->
-                    <button class="layui-btn" onclick="xadmin.open('入库','/admin/product/add','600','800')"><i class="layui-icon"></i>入库</button>
-<!--                    <button class="layui-btn" onclick="xadmin.open('出库','/admin/product/outOfStock','600','800')"><i class="layui-icon"></i>出库</button>-->
+                    <!--                    <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量删除-->
+                    <!--                    </button>-->
+                    <button class="layui-btn" onclick="xadmin.open('入库','/admin/product/add','600','800')"><i
+                            class="layui-icon"></i>入库
+                    </button>
+                    <!--                    <button class="layui-btn" onclick="xadmin.open('出库','/admin/product/outOfStock','600','800')"><i class="layui-icon"></i>出库</button>-->
                 </div>
                 <div class="layui-card-body layui-table-body layui-table-main">
 
-                    <table class="layui-hide" id="table_data" lay-filter="table_data" ></table>
+                    <table class="layui-hide" id="table_data" lay-filter="table_data"></table>
 
                     <script type="text/html" id="barDemo">
-                        <a class="layui-btn layui-btn-xs" lay-event="edit"  href="javascript:;">编辑</a>
+                        <a class="layui-btn layui-btn-xs" lay-event="edit" href="javascript:;">编辑</a>
                         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
                         <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="detail">出库详情</a>
                     </script>
@@ -78,8 +120,8 @@
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
         <button class="layui-btn layui-btn-sm" lay-event="getCheckData">出库</button>
-        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">查看历史单价</button>
-<!--        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>-->
+        <!--        <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">查看历史单价</button>-->
+        <!--        <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>-->
     </div>
 </script>
 <script>
@@ -111,86 +153,61 @@
 
 // 表单渲染
         table.render({
-            id:'testReload',
+            id: 'testReload',
             elem: '#table_data'
-            ,url:'/admin/product/getData'
-            ,toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
-            ,defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+            , url: '/admin/product/getData'
+            , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+            , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
                 title: '提示'
-                ,layEvent: 'LAYTABLE_TIPS'
-                ,icon: 'layui-icon-tips'
+                , layEvent: 'LAYTABLE_TIPS'
+                , icon: 'layui-icon-tips'
             }]
-            ,title: '仓库数据表'
-            ,cols: [[
+            , title: '仓库数据表'
+            , cols: [[
                 {type: 'checkbox', fixed: 'left'}
-                ,{field:'name', title:'产品名', width:120, edit: 'text', fixed: 'left', unresize: true, sort: true}
-                ,{field:'trademark', title:'品牌名', width:80, edit: 'text', fixed: 'left', templet: function(res){
-                        return '<em><b>'+ res.trademark +'</b></em>'
-                    }}
-                ,{field:'count', title:'数量', width:100}
-                ,{field:'unit', title:'单位', width:80,edit: 'text', sort: true, templet: function(res){
-                        var unit;
-                        if (res.unit == 1){
-                            unit = "K"
-                            res.unit = "k";
-                        }else{
-                            unit = "PCS"
-                            res.unit = "PCS";
+                , {field: 'id', title: 'ID', width: 100}
+                , {
+                    field: 'name', title: '产品名', width: 800, unresize: false, sort: true,
+                    templet: function (res) {
+                        var unit, is_heigh, is_braid, is_chip, foot_distance;
+                        if (res.unit == 1) {
+                            unit = "<b class='x-red' >K</b>"
+                        } else {
+                            unit = "<b class='x-red' >PCS</b>"
                         }
-                        return unit;
+                        if (res.is_high == 1) {
+                            is_heigh = "<b class='x-red'> 高频低阻 </b>";
+                        } else {
+                            is_heigh = " ";
+                        }
+                        if (res.is_braid == 1) {
+                            is_braid = "<b class='x-red' >编带</b>"
+                            foot_distance = "<b class='x-red' > 脚距：" + res.foot_distance + "</b>"
+                        } else {
+                            is_braid = " "
+                            foot_distance = " "
+                        }
+                        if (res.is_chip == 1) {
+                            is_chip = "<b class='x-red' >贴片</b>"
+                        } else {
+                            is_chip = " "
+                        }
+                        return '<em><b>' + res.name + '</b></em>' + '<em><b>' + "  " + res.trademark + '</b></em>' +
+                            " 数量：" + res.count + " 单位：" + unit + " 尺寸：" + res.size + " " + is_heigh + is_braid
+                            + foot_distance + is_chip + " <span >&nbsp&nbsp&nbsp 备注：</span>" + "<b class='x-red' >" + res.remark + "</b>"
                     }
                 }
-                ,{field:'amount', title:'单价', width:100, templet: function(res){
-                            if (res.amount == null){
-                                return 0.00
-                            }else{
-                                return res.amount
-                            }
-                        }
-                    }
-                ,{field:'size', title:'尺寸', width:100}
-                ,{field:'is_high', title:'高频', width:69, edit: 'text', sort: true, templet: function(res){
-                        var is_high;
-                        if (res.is_high == 1){
-                            return "<b class='x-red' >是</b>"
-                        }else{
-                            return "否"
-                        }
 
-                    }
-                }
-                ,{field:'is_braid', title:'编带', width:69, edit: 'text', sort: true, templet: function(res){
-                        var is_braid;
-                        if (res.is_braid == 1){
-                            return "<b class='x-red' >是</b>"
-
-                        }else{
-                            return "否"
-                        }
-
-                    }
-                }
-                ,{field:'is_chip', title:'贴片', width:69, edit: 'text', sort: true, templet: function(res){
-                        var is_chip;
-                        if (res.is_chip == 1){
-                            return "<b class='x-red' >是</b>"
-                        }else{
-                            return  "否"
-                        }
-
-                    }
-                }
-                ,{field:'foot_distance', title:'脚距', width:64}
-                ,{field:'remark', title:'备注', width:100}
-                ,{fixed: 'right', title:'操作', toolbar: '#barDemo', width:250}
+                // ,{field:'remark', title:'备注', width:100}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 250}
             ]]
-            ,page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+            , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
                 layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
                 //,curr: 5 //设定初始在第 5 页
-                ,groups: 1 //只显示 1 个连续页码
-                ,first: false //不显示首页
-                ,last: false //不显示尾页
-                ,limit: 20
+                , groups: 1 //只显示 1 个连续页码
+                , first: false //不显示首页
+                , last: false //不显示尾页
+                , limit: 20
             }
 
         });
@@ -210,7 +227,11 @@
                     name: data.field.name,
                     trademark: data.field.trademark,
                     start_time: data.field.start_time,
-                    end_time: data.field.end_time
+                    end_time: data.field.end_time,
+                    size: data.field.size,
+                    is_chip: data.field.is_chip,
+                    is_braid: data.field.is_braid,
+                    is_high: data.field.is_high
                 }
             }, 'data');
 
@@ -218,14 +239,13 @@
         })
 
 
-
         //监听行工具事件
-        table.on('tool(table_data)', function(obj){
+        table.on('tool(table_data)', function (obj) {
             var data = obj.data;
             // console.log(data)
             // 列表id：data.id
-            if(obj.event === 'del'){
-                layer.confirm('真的删除行么', function(index){
+            if (obj.event === 'del') {
+                layer.confirm('真的删除行么', function (index) {
                     // 发送请求删除ajax的信息
                     $.ajax({
                         url: "/admin/product/deleted",
@@ -238,47 +258,47 @@
                         success: function (resp) {
                             console.log(resp)
                             if (resp.code == 200) {
-                                layer.msg(resp.msg,{icon: 1});
+                                layer.msg(resp.msg, {icon: 1});
                                 obj.del();
                                 layer.close(index);
                             } else {
-                                layer.alert(resp.msg, { icon: 5 });
+                                layer.alert(resp.msg, {icon: 5});
                             }
                         }
 
                     })
 
                 });
-            }else if (obj.event == "edit"){
+            } else if (obj.event == "edit") {
                 // /admin/customers/edit
                 layer.open({
                     type: 2,
                     area: ['50%', '700px'],
                     resize: true,
-                    shadeClose:true,
+                    shadeClose: true,
                     offset: 'auto',
                     maxmin: true,
-                    content: "/admin/product/edit/"+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    content: "/admin/product/edit/" + data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 });
 
-            }else if(obj.event == "detail"){
+            } else if (obj.event == "detail") {
                 // /admin/customers/edit
                 console.log(data.id)
                 layer.open({
                     type: 2,
                     area: ['50%', '700px'],
                     resize: true,
-                    shadeClose:true,
+                    shadeClose: true,
                     offset: 'auto',
                     maxmin: true,
-                    content: "/admin/product/showTime/"+data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                    content: "/admin/product/showTime/" + data.id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                 });
             }
         });
 
-        table.on('toolbar(table_data)', function(obj){
+        table.on('toolbar(table_data)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
-            switch(obj.event){
+            switch (obj.event) {
                 case 'getCheckData':
                     var data = checkStatus.data;
                     // layer.alert(JSON.stringify(data));
@@ -286,10 +306,10 @@
                         type: 2,
                         area: ['50%', '700px'],
                         resize: true,
-                        shadeClose:true,
+                        shadeClose: true,
                         offset: 'auto',
                         maxmin: true,
-                        content: "/admin/product/out_html/"+data[0].id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        content: "/admin/product/out_html/" + data[0].id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                     });
                     break;
                 case 'getCheckLength':
@@ -299,22 +319,22 @@
                         type: 2,
                         area: ['50%', '700px'],
                         resize: true,
-                        shadeClose:true,
+                        shadeClose: true,
                         offset: 'auto',
                         maxmin: true,
-                        content: "/admin/product/out_html/"+data[0].id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
+                        content: "/admin/product/out_html/" + data[0].id //这里content是一个URL，如果你不想让iframe出现滚动条，你还可以content: ['http://sentsin.com', 'no']
                     });
                     break;
             }
         });
 
-        // 单元格编辑后的事件
-        table.on('edit(table_data)', function(obj){
-            var value = obj.value //得到修改后的值
-                ,data = obj.data //得到所在行所有键值
-                ,field = obj.field; //得到字段
-            layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改值为：'+ util.escape(value));
-        });
+        // // 单元格编辑后的事件
+        // table.on('edit(table_data)', function(obj){
+        //     var value = obj.value //得到修改后的值
+        //         ,data = obj.data //得到所在行所有键值
+        //         ,field = obj.field; //得到字段
+        //     layer.msg('[ID: '+ data.id +'] ' + field + ' 字段更改值为：'+ util.escape(value));
+        // });
     });
 </script>
 </html>

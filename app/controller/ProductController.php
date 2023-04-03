@@ -6,6 +6,7 @@ use app\BaseController;
 use app\model\OutOfStock;
 use app\model\Product;
 use app\model\ProductPrice;
+use app\model\Trademark;
 use app\service\ProductService;
 use think\Exception;
 use think\facade\View;
@@ -13,6 +14,8 @@ use think\facade\View;
 class ProductController extends  BaseController
 {
     public function index(){
+        $data = Trademark::where("deleted", 0)->select();
+        View::assign("data",$data);
         return view("./product/index");
     }
 
@@ -23,9 +26,13 @@ class ProductController extends  BaseController
         $trademark = input('trademark'); //商标
         $start_time = input("start_time"); //开始时间
         $end_time = input("end_time");      //结束时间
-
+        $size = input("size"); //尺寸
+        $is_chip = input("is_chip"); //是否贴片
+        $is_high = input("is_high"); //是否高频
+        $is_braid = input("is_braid"); //是否编带
+        
         $init_query = Product::where('deleted', 0);
-
+        
         if($name){
             $init_query = $init_query->where("name", "like", "%$name%");
         }
@@ -33,12 +40,23 @@ class ProductController extends  BaseController
         if($trademark){
             $init_query = $init_query->where("trademark", "like", "%$trademark%");
         }
-        
+        if($size){
+            $init_query = $init_query->where("size", "like", "%$size%");
+        }
         if ($start_time){
             $init_query = $init_query->where("created_at", ">=", $start_time);
         }
         if ($end_time){
             $init_query = $init_query->where("created_at", "<=", $end_time);
+        }
+        if ($is_chip){
+            $init_query = $init_query->where("is_chip", $is_high);
+        }
+        if ($is_high){
+            $init_query = $init_query->where("is_high", $is_high);
+        }
+        if ($is_braid){
+            $init_query = $init_query->where("is_braid", $is_braid);
         }
         $count = $init_query->count();
         $init_query = $init_query->page($page,$limit)->select();
@@ -53,7 +71,7 @@ class ProductController extends  BaseController
             if (empty($data)) errorRep("不能添加空数据", 0, []);
             $insertData = [
                 'name' => $data['name'],
-                "amount" => $data["price"],
+                // "amount" => $data["price"],
                 'trademark' => $data['trademark'],
                 'foot_distance' => $data['foot_distance'],
                 'size' => $data['size'],
@@ -66,10 +84,10 @@ class ProductController extends  BaseController
             ];
             try {
                 $product_id = Product::insertGetId($insertData);
-                ProductPrice::insert([
-                    "product_id" => $product_id,
-                    "amount" => $data["price"]
-                ]);
+                // ProductPrice::insert([
+                //     "product_id" => $product_id,
+                //     "amount" => $data["price"]
+                // ]);
             } catch (Exception $e) {
                 errorRep("添加失败" . $e->getMessage(), 0, []);
             }
@@ -77,6 +95,9 @@ class ProductController extends  BaseController
         } else {
             // 查询拥有的产品
             // View::assign("");
+            $data = Trademark::where("deleted", 0)->select();
+            View::assign("data",$data);
+            
             return \view("./product/add");
         }
         return false;
@@ -102,7 +123,7 @@ class ProductController extends  BaseController
         }
         View::assign('id', $product["id"]);
         View::assign('name', $product["name"]);
-        View::assign("price", $product["amount"]);
+        // View::assign("price", $product["amount"]);
         View::assign('trademark', $product["trademark"]);
         View::assign('size', $product["size"]);
         View::assign('count', $product["count"]);
@@ -113,6 +134,8 @@ class ProductController extends  BaseController
         View::assign('foot_distance', $product["foot_distance"]);
         View::assign('remark', $product["remark"]);
         View::assign('amount', $product["amount"]);
+        $data = Trademark::where("deleted", 0)->select();
+        View::assign("data",$data);
         return view("./product/edit");
     }
     
@@ -124,7 +147,7 @@ class ProductController extends  BaseController
         try {
             Product::where(["id" => $id, "deleted" => 0])->update(
                 ['name' => $data['name'],
-                    "amount" => $data["price"],
+                    // "amount" => $data["price"],
                     'trademark' => $data['trademark'],
                     'size' => $data['size'],
                     'count' => $data['count'],
@@ -136,10 +159,10 @@ class ProductController extends  BaseController
                     "updated_at" => date("Y-m-d H:i:s"),
                     'remark' => $data['remark'],
                 ]);
-            if (ProductPrice::where(["product_id" => $id, 'deleted' => 0])->value("id")){
-                ProductPrice::where(["product_id" => $id, 'deleted' => 0])->update(["deleted" => 1]);
-            }
-            ProductPrice::insert( ["product_id" => $id,"amount" => $data["price"]]);
+            // if (ProductPrice::where(["product_id" => $id, 'deleted' => 0])->value("id")){
+            //     ProductPrice::where(["product_id" => $id, 'deleted' => 0])->update(["deleted" => 1]);
+            // }
+            // ProductPrice::insert( ["product_id" => $id,"amount" => $data["price"]]);
         } catch (\Exception $e) {
             errorRep("修改失败" . $e->getMessage(), 0, []);
         }
@@ -200,7 +223,7 @@ class ProductController extends  BaseController
     public function showTime($id){
         if (empty($id)) errorRep("参数不能为空");
         
-        $data = OutOfStock::where(["product_id" => $id, "deleted" => 0])
+        $data = OutOfStock::where(["product_id" => $id, "deleted" => 0, "status" => 1])
             ->field([
                 'product_info','count','remaining_quantity','created_at'
             ])->select();

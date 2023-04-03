@@ -42,7 +42,7 @@
                 var form = layui.form;
                 //监听提交
                 form.on('submit(login)', function (data) {
-                   
+
                     $.ajax({
                         url: "/admin/login/userLogin",
                         data: {
@@ -55,7 +55,7 @@
                         success: function (resp) {
                             console.log(resp)
                             if (resp.code == 200) {
-                                layer.msg(resp.msg,{icon: 1},function () {
+                                layer.msg(resp.msg,{icon: 1,time:500},function () {
                                     location.href='/admin/login/home'
                                 })
 

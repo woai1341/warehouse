@@ -13,4 +13,10 @@ class Index extends BaseController
     {
         return view("./welcome");
     }
+    
+    
+    
+    public function test(){
+        return "DJDR" . date("Y-m-d")  . time() . mt_rand(100000,999999);
+    }
 }
